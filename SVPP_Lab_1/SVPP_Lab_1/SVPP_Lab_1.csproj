@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22F7412B-6E53-4DAD-8363-2B5CA21D864F}</ProjectGuid>
+    <ProjectGuid>{1296B2B3-02BE-4926-9C08-7C5AC1AF993A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SVPP_Lab_1</RootNamespace>
-    <AssemblyName>SVPP-Lab-1</AssemblyName>
+    <AssemblyName>SVPP_Lab_1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
