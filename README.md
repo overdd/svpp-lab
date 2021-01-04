@@ -1,2 +1,4 @@
 # svpp-lab
-BSUIR СВПП Lab Tasks
+BSUIR 
+Visual design and programming tool (WPF)
+Lab Tasks
