@@ -21,12 +21,16 @@ namespace SVPP_Lab_1
             if (!(DisplayField.Text.Contains(",") && (currentButton.Content.ToString() == ",")))
             {
                 if (DisplayField.Text == "0" && !(currentButton.Content.ToString() == ","))
+                {
                     DisplayField.Text = currentButton.Content.ToString();
+                    Description.Text += currentButton.Content.ToString();
+                }
                 else
+                {
                     DisplayField.Text += currentButton.Content.ToString();
+                    Description.Text += currentButton.Content.ToString();
+                }
             }
-            if (!(Description.Text == ""))
-                Description.Text = "";
         }
         private void Clear_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -34,26 +38,23 @@ namespace SVPP_Lab_1
             first = true;
             operand = null;
             DisplayField.Text = "0";
+            Description.Text = "";
         }
         private void MathAction_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!(Description.Text == ""))
-                Description.Text = "";
             operand = ((Button)sender).Content.ToString();
             if (first)
             {
                 firstValue_string = DisplayField.Text;
                 first = false;
+                DisplayField.Text = "";
             }
             else
                 secondValue_string = DisplayField.Text;
-            DisplayField.Text = "0";
+            Description.Text += operand;
         }
         private void Calculations_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!(Description.Text == ""))
-                Description.Text = "";
-
             Button currentButton = (Button)sender;
             if (!(currentButton.Content.ToString() == "="))
                 operand = currentButton.Content.ToString();
@@ -65,10 +66,10 @@ namespace SVPP_Lab_1
             }
             else
                 secondValue_string = DisplayField.Text;
-            DisplayField.Text = "0";
-            doTheMath();
+            Description.Text += "=";
+            Description.Text += doTheMath();
         }
-        private void doTheMath()
+        private string doTheMath()
         {
             try
             {
@@ -113,83 +114,85 @@ namespace SVPP_Lab_1
                         else
                             firstValue_double = 1 / firstValue_double;
                         break;
-                    //case "sin":
-                    //    if ((bool)Grad.IsChecked)
-                    //        firstValue_double = (System.Math.Sin((firstValue_double * Math.PI / 180)));
-                    //    else
-                    //        firstValue_double = System.Math.Sin(firstValue_double);
-                    //    break;
-                    //case "cos":
-                    //    if ((bool)Grad.IsChecked)
-                    //        firstValue_double = (System.Math.Cos((firstValue_double * Math.PI / 180)));
-                    //    else
-                    //        firstValue_double = System.Math.Cos(firstValue_double);
-                    //    break;
-                    //case "tg":
-                    //    if (tg_zero(firstValue_double))
-                    //        throw new DivideByZeroException();
-                    //    else
-                    //    {
-                    //        if ((bool)Grad.IsChecked)
-                    //            firstValue_double = (System.Math.Tan((firstValue_double * Math.PI / 180)));
-                    //        else
-                    //            firstValue_double = System.Math.Tan(firstValue_double);
-                    //    }
-                    //    break;
+                    case "sin":
+                        if ((bool)Grad.IsChecked)
+                            firstValue_double = (System.Math.Sin((firstValue_double * Math.PI / 180)));
+                        else
+                            firstValue_double = System.Math.Sin(firstValue_double);
+                        break;
+                    case "cos":
+                        if ((bool)Grad.IsChecked)
+                            firstValue_double = (System.Math.Cos((firstValue_double * Math.PI / 180)));
+                        else
+                            firstValue_double = System.Math.Cos(firstValue_double);
+                        break;
+                    case "tan":
+                        if (tan_zero(firstValue_double))
+                            throw new DivideByZeroException();
+                        else
+                        {
+                            if ((bool)Grad.IsChecked)
+                                firstValue_double = (System.Math.Tan((firstValue_double * Math.PI / 180)));
+                            else
+                                firstValue_double = System.Math.Tan(firstValue_double);
+                        }
+                        break;
                 }
-
                 DisplayField.Text = firstValue_double.ToString();
-
             }
 
             catch (DivideByZeroException)
             {
-                DisplayField.Text = "0";
-                Description.Text = "Деление на ноль.";
+                DisplayField.Text = "Error!";
                 first = true;
                 begin = true;
                 firstValue_double = 0;
                 secondValue_double = 0;
+                return "Cannot divide to zero";
             }
             catch (InvalidCastException)
             {
-                DisplayField.Text = "0";
-                Description.Text = "Неверный формат.";
+                DisplayField.Text = "Error!";
+                Description.Text = "Wrong format";
                 first = true;
                 begin = true;
                 firstValue_double = 0;
                 secondValue_double = 0;
+                return "Wrong format";
             }
             catch (Exception ex)
             {
-                DisplayField.Text = "0";
+                DisplayField.Text = "Error!";
                 Description.Text = ex.Message;
                 first = true;
                 begin = true;
                 firstValue_double = 0;
                 secondValue_double = 0;
+                return ex.Message;
             }
+            return firstValue_double.ToString();
         }
-        //bool tg_zero(double Zif)
-        //{
-        //    double part;
 
-        //    if (!(bool)Grad.IsChecked)
-        //        Zif = Zif * 180 / Math.PI;
+        bool tan_zero(double Zif)
+        {
+            double part;
 
-        //    part = Zif / 90;
-        //    if (part == Math.Truncate(part))
-        //    {
-        //        part = part / 2;
+            if (!(bool)Grad.IsChecked)
+                Zif = Zif * 180 / Math.PI;
 
-        //        if (part == Math.Truncate(part))
-        //            return false;
-        //        else
-        //            return true;
-        //    }
+            part = Zif / 90;
+            if (part == Math.Truncate(part))
+            {
+                part = part / 2;
 
-        //    else
-        //        return false;
-        //}
+                if (part == Math.Truncate(part))
+                    return false;
+                else
+                    return true;
+            }
+
+            else
+                return false;
+        }
     }
 }
