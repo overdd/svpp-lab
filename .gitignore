@@ -17,6 +17,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+SVPP_Lab_2/packages/
 
 # Roslyn cache directories
 *.ide/
