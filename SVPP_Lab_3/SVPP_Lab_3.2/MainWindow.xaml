@@ -5,8 +5,85 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SVPP_Lab_3._2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Employees" Height="300" Width="700">
+    <Window.Resources>
+        <!--Тригер для TextBox-->
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static
+                        RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+            <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
+        </Style>
+        <!--Тригер для ComboBox-->
+        <Style TargetType="{x:Type ComboBox}">
+            <EventSetter Event="LostFocus" Handler="ComboBox_GotFocus"/>
+        </Style>
+        <!--Вид при ошибке TextBox-->
+        <ControlTemplate x:Key="ErrorTempl">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderThickness="2" BorderBrush="Red">
+                    <AdornedElementPlaceholder/>
+                </Border>
+                <TextBlock Foreground="Red" FontSize="24">*</TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid x:Name="MainGrid">
+        <Canvas x:Name="MainCanvas">
+            <Label Content="Ф.И.О" HorizontalContentAlignment="Right" Width="80" Canvas.Top="20" Canvas.Left="10"/>
+            <Label Content="Зарплата" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="50" Canvas.Left="10"/>
+            <Label Content="Должность" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="80" Canvas.Left="10"/>
+            <Label Content="Город" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="110" Canvas.Left="10"/>
+            <TextBox x:Name ="TextBoxSurname" Width="80" Height="25" Canvas.Top="20" Canvas.Left="90"
+            Validation.ErrorTemplate="{StaticResource ErrorTempl}">
+                <TextBox.Text>
+                    <Binding Path="Surname" UpdateSourceTrigger = "LostFocus">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox x:Name ="TextBoxSalary" Width="80" Height="25" Canvas.Top="50" Canvas.Left="90"
+            Validation.ErrorTemplate="{StaticResource ErrorTempl}" PreviewTextInput="TextBoxSalary_PreviewTextInput">
+                <TextBox.Text>
+                    <Binding Path="Salary" UpdateSourceTrigger = "LostFocus">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <ComboBox x:Name ="ComboBoxPosition" Width="80" Height="25" Canvas.Top="80" Canvas.Left="90"
+                        IsEditable="true"
+                        ItemsSource="{Binding}"/>
+            <ComboBox x:Name ="ComboBoxCity" Width="80" Height="25" Canvas.Top="110" Canvas.Left="90"
+                        IsEditable="true"
+                        ItemsSource="{Binding}"/>
+            <ComboBox x:Name ="ComboBoxStreet" Width="80" Height="25" Canvas.Top="140" Canvas.Left="90"
+                        IsEditable="true"
+                        ItemsSource="{Binding}"/>
+            <ComboBox x:Name ="ComboBoxHouse" Width="80" Height="25" Canvas.Top="170" Canvas.Left="90"
+                        IsEditable="true"
+                        ItemsSource="{Binding}"/>
+            <ListBox x:Name="listBoxEmployee" Width="500" Height="175" Canvas.Top="20" Canvas.Left="180"
+                        ItemsSource="{Binding}"/>
+            <Button x:Name ="ButtonAdd" Content="Add" Width="100" Height="35" Canvas.Top="200" Canvas.Left="70"
+                    Click="ButtonAdd_Click"/>
+            <Button x:Name ="ButtonSave" Content="Save" Width="100" Height="35" Canvas.Top="200" Canvas.Left="180"
+                Click="ButtonSave_Click"/>
+            <Button x:Name ="ButtonRead" Content="Read" Width="100" Height="35" Canvas.Top="200" Canvas.Left="290"
+                Click="ButtonRead_Click"/>
+            <Button x:Name ="ButtonEdit" Content="Edit" Width="100" Height="35" Canvas.Top="200" Canvas.Left="400"
+                Click="ButtonEdit_Click"/>
+            <Button x:Name ="ButtonDelete" Content="Delete" Width="100" Height="35" Canvas.Top="200" Canvas.Left="510"
+                Click="ButtonDelete_Click"/>
+        </Canvas>
     </Grid>
 </Window>
