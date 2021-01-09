@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace SVPP_Lab_3._2
+namespace LAB_3
 {
     public class Employee : IDataErrorInfo
     {
@@ -21,17 +21,16 @@ namespace SVPP_Lab_3._2
             get { throw new NotImplementedException(); }
         }
 
-        string patternSurname = @"[^a-яА-ЯёЁa-zA-Z -]";
+        string patternSurname = @"[^a-zA-Z -]";
         string patternSalary = @"[^0-9.,]";
-        string patternPosition = @"[^a-яА-ЯёЁa-zA-Z. -]";
-        string patternCity = @"[^a-яА-ЯёЁa-zA-Z. -]";
-        string patternStreet = @"[^a-яА-ЯёЁa-zA-Z0-9. -]";
-        string patternHouse = @"[^a-яА-ЯёЁa-zA-Z0-9. /-]";
+        string patternPosition = @"[^a-zA-Z. -]";
+        string patternCity = @"[^a-zA-Z. -]";
+        string patternStreet = @"[^a-zA-Z0-9. -]";
+        string patternHouse = @"[^a-zA-Z0-9. /-]";
 
         bool check_Surname = false;
         bool check_Salary = false;
 
-        #region //Пустой конструктор
         public Employee()
         {
             Surname = "";
@@ -41,9 +40,7 @@ namespace SVPP_Lab_3._2
             Street = "";
             House = "";
         }
-        #endregion
 
-        #region //Конcтруктор со всеми полями
         public Employee(string surname, double salary, string position, string city, string street, string house)
         {
             this.Surname = surname;
@@ -53,9 +50,7 @@ namespace SVPP_Lab_3._2
             this.Street = street;
             this.House = house;
         }
-        #endregion
 
-        #region //Конструктор на основе экземпляра класса
         public Employee(Employee w)
         {
             this.Surname = w.Surname;
@@ -65,7 +60,6 @@ namespace SVPP_Lab_3._2
             this.Street = w.Street;
             this.House = w.House;
         }
-        #endregion
 
         public void CheckValue()
         {
@@ -90,11 +84,11 @@ namespace SVPP_Lab_3._2
                 switch (columnName)
                 {
                     case "Surname":
-                        if (check_Surname)   //Что бы во время инициализации не выбивало ошибку check_Surname
+                        if (check_Surname)   
                         {
                             if (Regex.IsMatch(Surname, patternSurname, RegexOptions.IgnoreCase))
                             {
-                                error = "Фамилия должна состоять из букв";
+                                error = "Full name should consist of letters only";
                                 ValidData = false;
                             }
                         }
@@ -102,11 +96,11 @@ namespace SVPP_Lab_3._2
                         break;
 
                     case "Salary":
-                        if (Salary <= 0 && check_Salary)    //Что бы во время инициализации не выбивало ошибку check_Salary
+                        if (Salary <= 0 && check_Salary) 
                         {
                             if (Regex.IsMatch(Salary.ToString(), patternSalary, RegexOptions.IgnoreCase))
                             {
-                                error = "Зарплата не может быть отрицательной";
+                                error = "Salary should be posititve";
                                 ValidData = false;
                             }
                         }
@@ -122,5 +116,4 @@ namespace SVPP_Lab_3._2
             return $"{ Surname};{Salary};{Position};{City};{Street};{House}";
         }
     }
-
 }

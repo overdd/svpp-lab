@@ -1,13 +1,11 @@
-﻿<Window x:Class="SVPP_Lab_3._2.MainWindow"
+﻿<Window x:Class="LAB_3._2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SVPP_Lab_3._2"
         mc:Ignorable="d"
-        Title="Employees" Height="300" Width="700">
+        Title="MainWindow" Height="325" Width="700" MaxHeight="325" MinHeight="325" MaxWidth="600" MinWidth="700">
     <Window.Resources>
-        <!--Тригер для TextBox-->
         <Style TargetType="{x:Type TextBox}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
@@ -20,7 +18,6 @@
             </Style.Triggers>
             <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
         </Style>
-        <!--Тригер для ComboBox-->
         <Style TargetType="{x:Type ComboBox}">
             <EventSetter Event="LostFocus" Handler="ComboBox_GotFocus"/>
         </Style>
@@ -36,10 +33,12 @@
     </Window.Resources>
     <Grid x:Name="MainGrid">
         <Canvas x:Name="MainCanvas">
-            <Label Content="Ф.И.О" HorizontalContentAlignment="Right" Width="80" Canvas.Top="20" Canvas.Left="10"/>
-            <Label Content="Зарплата" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="50" Canvas.Left="10"/>
-            <Label Content="Должность" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="80" Canvas.Left="10"/>
-            <Label Content="Город" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="110" Canvas.Left="10"/>
+            <Label Content="Full Name" HorizontalContentAlignment="Right" Width="80" Canvas.Top="20" Canvas.Left="10"/>
+            <Label Content="Salary" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="50" Canvas.Left="10"/>
+            <Label Content="Position" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="80" Canvas.Left="10"/>
+            <Label Content="City" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="110" Canvas.Left="10"/>
+            <Label Content="Street" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="140" Canvas.Left="10"/>
+            <Label Content="House" HorizontalContentAlignment="Right"  Width="80" Canvas.Top="170" Canvas.Left="10"/>
             <TextBox x:Name ="TextBoxSurname" Width="80" Height="25" Canvas.Top="20" Canvas.Left="90"
             Validation.ErrorTemplate="{StaticResource ErrorTempl}">
                 <TextBox.Text>
@@ -69,9 +68,16 @@
             <ComboBox x:Name ="ComboBoxStreet" Width="80" Height="25" Canvas.Top="140" Canvas.Left="90"
                         IsEditable="true"
                         ItemsSource="{Binding}"/>
-            <ComboBox x:Name ="ComboBoxHouse" Width="80" Height="25" Canvas.Top="170" Canvas.Left="90"
-                        IsEditable="true"
-                        ItemsSource="{Binding}"/>
+            <TextBox x:Name ="TextBoxHouse" Width="80" Height="25" Canvas.Top="170" Canvas.Left="90"
+            Validation.ErrorTemplate="{StaticResource ErrorTempl}">
+                <TextBox.Text>
+                    <Binding Path="House" UpdateSourceTrigger = "LostFocus">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <ListBox x:Name="listBoxEmployee" Width="500" Height="175" Canvas.Top="20" Canvas.Left="180"
                         ItemsSource="{Binding}"/>
             <Button x:Name ="ButtonAdd" Content="Add" Width="100" Height="35" Canvas.Top="200" Canvas.Left="70"

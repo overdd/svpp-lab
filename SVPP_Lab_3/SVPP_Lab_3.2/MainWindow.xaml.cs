@@ -3,56 +3,39 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections.Specialized;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
-using System.Xml.Serialization;
-using System.IO;
-using System.Globalization;
 
-namespace SVPP_Lab_3._2
+namespace LAB_3._2
 {
     public partial class MainWindow : Window
     {
-        ObservableCollection<Employee> colEmployees = new ObservableCollection<Employee>();
+        readonly Employee employee;
+        readonly FileHandler fileHandler = new FileHandler();
+        readonly ObservableCollection<Employee> colEmployees = new ObservableCollection<Employee>();
 
-        #region //Create collections of class fields
-        ObservableCollection<String> colSurname = new ObservableCollection<String>();
-        ObservableCollection<Double> colSalary = new ObservableCollection<Double>();
-        ObservableCollection<String> colPositions = new ObservableCollection<String>();
-        ObservableCollection<String> colCity = new ObservableCollection<String>();
-        ObservableCollection<String> colStreet = new ObservableCollection<String>();
-        ObservableCollection<String> colHouse = new ObservableCollection<String>();
-        #endregion
-
-        Employee employee;
-
-        string path = Directory.GetCurrentDirectory() + @"\storage.txt";
+        readonly ObservableCollection<String> colSurname = new ObservableCollection<String>();
+        readonly ObservableCollection<Double> colSalary = new ObservableCollection<Double>();
+        readonly ObservableCollection<String> colPositions = new ObservableCollection<String>();
+        readonly ObservableCollection<String> colCity = new ObservableCollection<String>();
+        readonly ObservableCollection<String> colStreet = new ObservableCollection<String>();
+        readonly ObservableCollection<String> colHouse = new ObservableCollection<String>();
 
         public MainWindow()
         {
             InitializeComponent();
             employee = new Employee();
-
+            colEmployees = fileHandler.colEmployees;
             this.DataContext = employee;
 
             listBoxEmployee.DataContext = colEmployees;
 
-            #region //Binding to collection combobox
             ComboBoxPosition.DataContext = colPositions;
             ComboBoxCity.DataContext = colCity;
             ComboBoxStreet.DataContext = colStreet;
-            ComboBoxHouse.DataContext = colHouse;
-            #endregion
 
-            FileRead();
+            listBoxEmployee.DataContext = fileHandler.FileRead();
 
             foreach (Employee emp in colEmployees)
             {
@@ -63,96 +46,56 @@ namespace SVPP_Lab_3._2
                 colStreet.Add(emp.Street);
                 colHouse.Add(emp.House);
             }
-
-            #region //Fill class field collections
-            //colSurname.Add("Иванов Иван Иванович");
-            //colSurname.Add("Петров Петр Петрович");
-            //colSurname.Add("Николаев Николай Николаевич");
-
-            //colSalary.Add(20000.50);
-            //colSalary.Add(15000.50);
-            //colSalary.Add(10000.50);
-
-            //colPositions.Add("Директор");
-            //colPositions.Add("Секретарь");
-            //colPositions.Add("Инженер");
-
-            //colCity.Add("г. Минск");
-            //colCity.Add("г. Гродно");
-            //colCity.Add("г. Брест");
-
-            //colStreet.Add("ул. Советская");
-            //colStreet.Add("ул. Ленина");
-            //colStreet.Add("ул. Меньшикова");
-
-            //colHouse.Add("д. 1");
-            //colHouse.Add("д. 2");
-            //colHouse.Add("д. 2а корп. 1");
-            #endregion
-
-            #region //Fill a class collection
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    //colEmployees.Add(new Employee());
-            //    colEmployees[i].Surname = colSurname[i];
-            //    colEmployees[i].Salary = colSalary[i];
-            //    colEmployees[i].Position = colPositions[i];
-            //    colEmployees[i].City = colCity[i];
-            //    colEmployees[i].Street = colStreet[i];
-            //    colEmployees[i].House = colHouse[i];
-            //}
-            #endregion
-
-            listBoxEmployee.SelectionChanged += listBoxEmployee_Selected;
+            listBoxEmployee.SelectionChanged += ListBoxEmployee_Selected;
         }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                bool existEmployee = false;
+                bool isEmployeeExists = false;
 
                 Filleng_Field_Class(employee);
 
-                employee.CheckValue(); //Check Value Field of a class Employee
+                employee.CheckValue();
 
-                #region //Check exist
                 foreach (Employee w in colEmployees)
                 {
                     if (w.Surname.Equals(employee.Surname) && w.City.Equals(employee.City) && w.Street.Equals(employee.Street) && w.House.Equals(employee.House))
                     {
-                        existEmployee = true;
+                        isEmployeeExists = true;
                     }
                 }
-                #endregion
 
-                if (!existEmployee && employee.ValidData) //If not exist this employee and valid data
+                if (!isEmployeeExists && employee.ValidData)
                 {
                     Updating_Class_Field_Collections();
-
-                    existEmployee = false;
-
+                    isEmployeeExists = false;
                     colEmployees.Add(new Employee(employee));
+                    MessageBox.Show("Record was added successfully!");
                 }
                 else
                 {
-                    MessageBoxResult messageBoxResult = MessageBox.Show("Сотрудник уже существует или введены не верные данные", "Внимание!!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Employee alreasy exists OR you've entered wrong data", "Warning!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                listBoxEmployee.DataContext = colEmployees;
             }
             catch (ArgumentException exc)
             {
-                MessageBox.Show($"Ошибка! {exc.Message}");
+                MessageBox.Show($"Error happened while trying to add new employee! \n {exc.Message}");
             }
         }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            FileSave();
+            fileHandler.FileSave(colEmployees);
+            MessageBox.Show("File was saved");
         }
 
         private void ButtonRead_Click(object sender, RoutedEventArgs e)
         {
-            FileRead();
+            listBoxEmployee.DataContext = fileHandler.FileRead();
+            MessageBox.Show("File was read");
         }
 
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
@@ -179,21 +122,21 @@ namespace SVPP_Lab_3._2
                     i++;
                 }
 
-                if (!existEmployee && employee.ValidData) //If not exist this employee and valid data
+                if (!existEmployee && employee.ValidData)
                 {
                     Updating_Class_Field_Collections();
                     Filleng_Field_Class(colEmployees[iLb]);
                 }
                 else
                 {
-                    MessageBoxResult messageBoxResult = MessageBox.Show("Сотрудник уже существует или введены не верные данные Edit", "Внимание!!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxResult messageBoxResult = MessageBox.Show("Employee already exist OR you've entered wrong data!", "Achtung!!!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 listBoxEmployee.Items.Refresh();
             }
             catch (ArgumentException exc)
             {
-                MessageBox.Show($"Ошибка! {exc.Message}");
+                MessageBox.Show($"Some error with editing! {exc.Message}");
             }
         }
 
@@ -206,20 +149,19 @@ namespace SVPP_Lab_3._2
 
         private void ComboBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            string patternPosition = @"[^a-яА-ЯёЁa-zA-Z. -]";
-            string patternCity = @"[^a-яА-ЯёЁa-zA-Z. -]";
-            string patternStreet = @"[^a-яА-ЯёЁa-zA-Z0-9. -]";
-            string patternHouse = @"[^a-яА-ЯёЁa-zA-Z0-9. /-]";
+            string patternPosition = @"[^a-zA-Z. -]";
+            string patternCity = @"[^a-zA-Z. -]";
+            string patternStreet = @"[^a-zA-Z0-9. -]";
+            string patternHouse = @"[^a-zA-Z0-9. /-]";
 
             Color colorRed = (Color)ColorConverter.ConvertFromString("#FF0000");
 
             ComboBox combobox = (ComboBox)sender;
-            //Brush redBrush = new SolidColorBrush(Colors.Red);
             Brush redBrush = new SolidColorBrush(colorRed);
             Brush redDefault = new SolidColorBrush(Colors.Black);
 
-            StringBuilder tt = new StringBuilder();
-            var s = tt.ToString();
+            StringBuilder toolTipStringBuilder = new StringBuilder();
+            var toolTipString = toolTipStringBuilder.ToString();
 
             switch ((string)combobox.Name)
             {
@@ -227,48 +169,48 @@ namespace SVPP_Lab_3._2
                     if (Regex.IsMatch(combobox.Text, patternPosition, RegexOptions.IgnoreCase))
                     {
                         combobox.Foreground = redBrush;
-                        combobox.ToolTip = tt.Append("Наименование должности должно состоять из букв и '-'");
+                        combobox.ToolTip = toolTipStringBuilder.Append("Position should consist letters and \"-\"");
                     }
                     else
                     {
                         combobox.Foreground = redDefault;
-                        combobox.ToolTip = string.IsNullOrEmpty(s) ? null : s;
+                        combobox.ToolTip = string.IsNullOrEmpty(toolTipString) ? null : toolTipString;
                     }
                     break;
                 case "ComboBoxCity":
                     if (Regex.IsMatch(combobox.Text, patternCity, RegexOptions.IgnoreCase))
                     {
                         combobox.Foreground = redBrush;
-                        combobox.ToolTip = tt.Append("Название города должно состоять из букв и '-'");
+                        combobox.ToolTip = toolTipStringBuilder.Append("City name should consist letters and \"-\"");
                     }
                     else
                     {
                         combobox.Foreground = redDefault;
-                        combobox.ToolTip = string.IsNullOrEmpty(s) ? null : s;
+                        combobox.ToolTip = string.IsNullOrEmpty(toolTipString) ? null : toolTipString;
                     }
                     break;
                 case "ComboBoxStreet":
                     if (Regex.IsMatch(combobox.Text, patternStreet, RegexOptions.IgnoreCase))
                     {
                         combobox.Foreground = redBrush;
-                        combobox.ToolTip = tt.Append("Название улицы должно состоять из букв, цифр и '-'");
+                        combobox.ToolTip = toolTipStringBuilder.Append("Street name should consist letters, numbers and \"-\"");
                     }
                     else
                     {
                         combobox.Foreground = redDefault;
-                        combobox.ToolTip = string.IsNullOrEmpty(s) ? null : s;
+                        combobox.ToolTip = string.IsNullOrEmpty(toolTipString) ? null : toolTipString;
                     }
                     break;
-                case "ComboBoxHouse":
+                case "TextBoxHouse":
                     if (Regex.IsMatch(combobox.Text, patternHouse, RegexOptions.IgnoreCase))
                     {
                         combobox.Foreground = redBrush;
-                        combobox.ToolTip = tt.Append("Номер дома должен состоять из букв, цифр, '-' и '/'");
+                        combobox.ToolTip = toolTipStringBuilder.Append("House number should consist letters, numbers and \"-\"");
                     }
                     else
                     {
                         combobox.Foreground = redDefault;
-                        combobox.ToolTip = string.IsNullOrEmpty(s) ? null : s;
+                        combobox.ToolTip = string.IsNullOrEmpty(toolTipString) ? null : toolTipString;
                     }
                     break;
             }
@@ -286,7 +228,7 @@ namespace SVPP_Lab_3._2
             emp.Position = ComboBoxPosition.Text.ToString();
             emp.City = ComboBoxCity.Text.ToString();
             emp.Street = ComboBoxStreet.Text.ToString();
-            emp.House = ComboBoxHouse.Text.ToString();
+            emp.House = TextBoxHouse.Text.ToString();
         }
 
         public void Updating_Class_Field_Collections()
@@ -312,10 +254,9 @@ namespace SVPP_Lab_3._2
             }
         }
 
-        private void TextBoxSalary_PreviewTextInput(object sender, TextCompositionEventArgs e) //Убираем возможность ввода запятой или двух десятичных разделителей
+        private void TextBoxSalary_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-
             string replacementSeparator = ".";
             string replaceableSeparator = ",";
 
@@ -330,65 +271,20 @@ namespace SVPP_Lab_3._2
             {
                 if (!textBox.Text.Contains(replacementSeparator))
                 {
-                    textBox.Text = textBox.Text + replacementSeparator; //вместо "," добавлем "."
-                    textBox.SelectionStart = textBox.Text.Length; //Пеермещаем каретку в конец TextBox
+                    textBox.Text = textBox.Text + replacementSeparator; 
+                    textBox.SelectionStart = textBox.Text.Length; 
                 }
-                e.Handled = true; //Не выводить
+                e.Handled = true; 
             }
         }
 
-        public void FileSave()
-        {
-            XmlSerializer ser = new XmlSerializer(typeof(ObservableCollection<Employee>));
-            FileStream file = null;
 
-            try
-            {
-                file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                ser.Serialize(file, colEmployees);
-            }
-            catch (Exception e)
-            {
-                MessageBoxResult messageBoxResult = MessageBox.Show($"{e.Message}", "Внимание!!!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            if (file != null)
-            {
-                file.Close();
-            }
-        }
-
-        public void FileRead()
-        {
-            XmlSerializer ser = new XmlSerializer(typeof(ObservableCollection<Employee>));
-
-            FileStream file = null;
-
-            try
-            {
-                file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-                colEmployees = (ObservableCollection<Employee>)ser.Deserialize(file);
-                listBoxEmployee.DataContext = colEmployees;
-            }
-            catch (Exception e)
-            {
-                MessageBoxResult messageBoxResult = MessageBox.Show($"{e.Message}", "Внимание!!!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            if (file != null)
-            {
-                file.Close();
-            }
-
-        }
-
-        private void listBoxEmployee_Selected(object sender, RoutedEventArgs e)
+        private void ListBoxEmployee_Selected(object sender, RoutedEventArgs e)
         {
             ListBox lb = (ListBox)sender;
             int n = 0;
 
-            //CultureInfo inf = new CultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.Name);
-            string replaceableSeparator = ",";//inf.NumberFormat.NumberDecimalSeparator;
+            string replaceableSeparator = ",";
             string replacementSeparator = ".";
 
             foreach (Employee emp in colEmployees)
@@ -400,7 +296,7 @@ namespace SVPP_Lab_3._2
                     ComboBoxPosition.SelectedItem = emp.Position;
                     ComboBoxCity.SelectedItem = emp.City;
                     ComboBoxStreet.SelectedItem = emp.Street;
-                    ComboBoxHouse.SelectedItem = emp.House;
+                    TextBoxHouse.Text = emp.House;
                 }
                 n++;
             }
@@ -408,8 +304,24 @@ namespace SVPP_Lab_3._2
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            int iLb = listBoxEmployee.SelectedIndex;
-            colEmployees.Remove(colEmployees[iLb]);
+            try
+            {
+                int iLb = listBoxEmployee.SelectedIndex;
+                if (iLb != -1)
+                {
+                    colEmployees.Remove(colEmployees[iLb]);
+                    listBoxEmployee.DataContext = colEmployees;
+                }
+                else
+                {
+                    MessageBox.Show($"Select employee record to delete!");
+                }
+
+            }
+            catch (ArgumentException exc)
+            {
+                MessageBox.Show($"Some error with deleting! \n{exc.Message}");
+            }
         }
     }
 }
