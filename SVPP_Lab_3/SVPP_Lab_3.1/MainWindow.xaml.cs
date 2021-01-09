@@ -14,8 +14,8 @@ namespace SVPP_Lab_3._1
         double _x, _S, _Y = 0.0;
         int _k, n = 0;
 
-        Func<double, int, double> Sx = (double x, int k) => Math.Pow(x, k) * Math.Pow(Math.Sin(Math.PI / 4), k);
-        Func<double, double> Yx = (double x) => x * Math.Sin(Math.PI / 4) / (1 - 2 * x * Math.Cos(Math.PI / 4) + x * x);
+        readonly Func<double, int, double> Sx = (double x, int k) => Math.Pow(x, k) * Math.Pow(Math.Sin(Math.PI / 4), k);
+        readonly Func<double, double> Yx = (double x) => x * Math.Sin(Math.PI / 4) / (1 - 2 * x * Math.Cos(Math.PI / 4) + x * x);
 
         public MainWindow()
         {
@@ -28,18 +28,12 @@ namespace SVPP_Lab_3._1
 
         private void ButtonCalc_Click(object sender, RoutedEventArgs e)
         {
-
-
             try
             {
                 if (values.StepH == 0)
-                {
                     throw new ArgumentException($"Step = {values.StepH}");
-                }
                 else if (values.NQuantity == 0)
-                {
                     throw new ArgumentException($"N = {values.NQuantity}");
-                }
 
                 results.Clear();
 
