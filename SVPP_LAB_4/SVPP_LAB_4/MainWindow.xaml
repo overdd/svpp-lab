@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SVPP_LAB_4"
         mc:Ignorable="d"
-        Title="Hippodrome" Height="600" Width="800">
+        Title="Hippodrome" Height="650" Width="800">
     <Grid>
         <StackPanel>
-            <Canvas x:Name="HippodromeField" Height="450" Width="700" Background="GreenYellow">
-                <Ellipse x:Name="HippodromeFieldTrack"
-                    Width="700"
+            <Canvas x:Name="HippodromeField" Height="450" Width="700" Background="LightGreen">
+                <Ellipse x:Name="HippodromeFieldTrack1"
+                    Width="400"
                     Height="400"
                     Stroke="Black"
-                    StrokeThickness="4"
-                    Canvas.Left="1"
+                    StrokeThickness="3"
+                    Canvas.Left="155"
                     Canvas.Top="25"/>
+
                 <Image Source="Images/flag.png" Canvas.Top="370" Canvas.Left="350"/>
             </Canvas>
-            <Grid>
+            <Grid Width="700">
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
@@ -28,24 +28,18 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+
                 </Grid.ColumnDefinitions>
+                <Label Margin="15" Grid.Row="0" Grid.Column="0">Horse's name:</Label>
+                <TextBlock x:Name="HorseNameTextBlock" Grid.Row="0" Grid.Column="0" Margin="200 20 0 0 "></TextBlock>
+                <Label Margin="15" Grid.Row="1" Grid.Column="0">Horse's speed:</Label>
+                <TextBlock x:Name="HorseSpeedTextBlock" Grid.Row="1" Grid.Column="0" Margin="200 20 0 0"></TextBlock>
+                <Label Margin="15" Grid.Row="2" Grid.Column="0">Horse's position:</Label>
+                <TextBlock x:Name="HorsePositionTextBlock" Grid.Row="2" Grid.Column="0" Margin="200 20 0 0 "></TextBlock>
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Horse 1 Speed, mph" Margin="45 0 0 0"/>
-                <Label Grid.Row="1" Grid.Column="0" Content="Horse 2 Speed, mph" Margin="45 0 0 0"/>
-                <Label Grid.Row="2" Grid.Column="0" Content="Horse 3 Speed, mph" Margin="45 0 0 0"/>
-                <Label Grid.Row="3" Grid.Column="0" Content="Horse 4 Speed, mph" Margin="45 0 0 0"/>
-
-                <TextBlock x:Name="TextBlockHorseSpeed1" Grid.Row="0" Grid.Column="1" Text="0" Margin="45 5 0 0"></TextBlock>
-                <TextBlock x:Name="TextBlockHorseSpeed2" Grid.Row="1" Grid.Column="1" Text="0" Margin="45 5 0 0"></TextBlock>
-                <TextBlock x:Name="TextBlockHorseSpeed3" Grid.Row="2" Grid.Column="1" Text="0" Margin="45 5 0 0"></TextBlock>
-                <TextBlock x:Name="TextBlockHorseSpeed4" Grid.Row="3" Grid.Column="1" Text="0" Margin="45 5 0 0"></TextBlock>
-
-                <Button Grid.Row="0" Grid.Column="3" Margin="5">Start</Button>
-                <Button Grid.Row="1" Grid.Column="3" Margin="5">Pause</Button>
-
-                <Button Grid.Row="3" Grid.Column="3" Margin="5">Reset</Button>
+                <Button Grid.Row="0" Grid.Column="1" Margin="15" Click="ButtonStartClick">Start</Button>
+                <Button Grid.Row="1" Grid.Column="1" Margin="15" Click="ButtonPauseClick">Pause</Button>
+                <Button Grid.Row="2" Grid.Column="1" Margin="15" Click="ButtonResetClick">Reset</Button>
 
             </Grid>
         </StackPanel>
