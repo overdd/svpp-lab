@@ -1,0 +1,25 @@
+﻿<Window x:Class="SVPP_Lab_6.Dialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SVPP_Lab_6"
+        mc:Ignorable="d"
+        Title="Dialog" Height="200" Width="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+
+        </Grid.RowDefinitions>
+        <Label>Enter N value</Label>
+        <TextBox Name="nForm" Margin="30"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="45" Text="{Binding Path=ValueCheck, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+        <Button Name="Button_OK" Grid.Column="0" Grid.Row="1" Content="OK" Height="30" Width="60" Click="ButtonOKClick"/>
+        <Button Name="Button_Cancel" Grid.Column="1" Grid.Row="1" Height="30" Width="60" Content="Cancel" Click="ButtonCancelClick"/>
+    </Grid>
+
+</Window>
