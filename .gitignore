@@ -149,6 +149,8 @@ csx/
 
 # Windows Store app package directory
 AppPackages/
+**/*/packages/
+*/packages/
 
 # Others
 sql/
